@@ -10,13 +10,22 @@ type Props = {
   }>
 }
 
+function mapDatabaseCandle(candle: any) {
+  return {
+    ...candle,
+    recipientName: candle.recipient_name
+  }
+}
+
 export default async function CandlePage({ params }: Props) {
   const { id } = await params
-  const candle = await getCandleById(id)
+  const dbCandle = await getCandleById(id)
 
-  if (!candle) {
+  if (!dbCandle) {
     notFound()
   }
+
+  const candle = mapDatabaseCandle(dbCandle)
 
   return (
     <main 
