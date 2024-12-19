@@ -16,7 +16,7 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen w-full bg-gradient-to-b from-white to-neutral-50">
       <div className="max-w-[1800px] mx-auto px-8 py-16 md:py-16 py-8">
-        <div className="flex flex-col md:flex-row md:items-baseline mb-16 md:mb-32 gap-8 md:gap-0">
+        <div className="flex flex-col md:flex-row md:items-baseline mb-16 md:mb-24 gap-8 md:gap-0">
           <h1 className="text-xl tracking-[0.2em] text-neutral-400 font-light">candle collection</h1>
           <div className="md:ml-auto order-3 md:order-2">
             <Link 
@@ -33,7 +33,7 @@ export default async function HomePage() {
         <div className="relative">
           {/* Candles */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 
-                         gap-x-8 md:gap-x-16 gap-y-16 md:gap-y-24 pb-16">
+                         gap-x-8 md:gap-x-16 gap-y-20 md:gap-y-24 pb-16">
             {candles.map((candle) => (
               <Link 
                 key={candle.id} 
