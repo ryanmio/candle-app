@@ -4,11 +4,14 @@ import { FeedbackForm } from '@/components/feedback-form'
 import { AromaVisualization } from '@/components/aroma-visualization'
 import { notFound } from 'next/navigation'
 
-export default async function CandlePage({
-  params: { id },
-}: {
-  params: { id: string }
-}) {
+type Props = {
+  params: Promise<{
+    id: string
+  }>
+}
+
+export default async function CandlePage({ params }: Props) {
+  const { id } = await params
   const candle = await getCandleById(id)
 
   if (!candle) {
