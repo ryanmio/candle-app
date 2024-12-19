@@ -25,35 +25,61 @@ export function AromaVisualization({ scents }: { scents: Scent[] }) {
 
     // Create particles for each scent
     const particles = scents.flatMap(scent => 
-      Array.from({ length: Math.floor(scent.intensity * 20) }, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 8 + (scent.intensity * 8),
-        speedX: (Math.random() - 0.5) * 0.5,
-        speedY: (Math.random() - 0.5) * 0.5,
-        scent,
-        opacity: Math.random() * 0.5 + 0.3
-      }))
+      Array.from({ length: Math.floor(scent.intensity * 50) }, () => {
+        const baseSize = scent.intensity * 6
+        const variance = baseSize * 0.7
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * variance + baseSize,
+          speedX: (Math.random() - 0.5) * 0.2,
+          speedY: (Math.random() - 0.5) * 0.2,
+          scent,
+          opacity: Math.random() * 0.3 + 0.1,
+          // Add slight wobble to movement
+          wobble: {
+            amplitude: Math.random() * 0.5,
+            frequency: Math.random() * 0.02 + 0.01,
+            offset: Math.random() * Math.PI * 2
+          }
+        }
+      })
     )
 
+    let time = 0
     // Animation
     let animationFrame: number
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
+      time += 1
       
       particles.forEach(particle => {
+        // Add wobble to movement
+        const wobbleX = Math.sin(time * particle.wobble.frequency + particle.wobble.offset) * particle.wobble.amplitude
+        const wobbleY = Math.cos(time * particle.wobble.frequency + particle.wobble.offset) * particle.wobble.amplitude
+        
         // Update position
-        particle.x += particle.speedX
-        particle.y += particle.speedY
+        particle.x += particle.speedX + wobbleX
+        particle.y += particle.speedY + wobbleY
 
-        // Bounce off edges
-        if (particle.x < 0 || particle.x > canvas.offsetWidth) particle.speedX *= -1
-        if (particle.y < 0 || particle.y > canvas.offsetHeight) particle.speedY *= -1
+        // Wrap around edges instead of bouncing
+        if (particle.x < 0) particle.x = canvas.offsetWidth
+        if (particle.x > canvas.offsetWidth) particle.x = 0
+        if (particle.y < 0) particle.y = canvas.offsetHeight
+        if (particle.y > canvas.offsetHeight) particle.y = 0
 
-        // Draw particle
+        // Draw particle with soft edges
+        const gradient = ctx.createRadialGradient(
+          particle.x, particle.y, 0,
+          particle.x, particle.y, particle.size
+        )
+        const color = particle.scent.color || '#000000'
+        gradient.addColorStop(0, `${color}${Math.round(particle.opacity * 255).toString(16).padStart(2, '0')}`)
+        gradient.addColorStop(1, `${color}00`)
+        
         ctx.beginPath()
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
-        ctx.fillStyle = `${particle.scent.color || '#000000'}${Math.round(particle.opacity * 255).toString(16).padStart(2, '0')}`
+        ctx.fillStyle = gradient
         ctx.fill()
       })
 
