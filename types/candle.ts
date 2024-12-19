@@ -13,6 +13,7 @@ export interface Scent {
   name: string
   description: string
   intensity: number
+  color?: string
 }
 
 export interface Feedback {
