@@ -2,7 +2,7 @@
 
 export function LoadingScreen() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-8 p-4">
+    <div className="fixed inset-0 flex min-h-screen flex-col items-center justify-center gap-8 p-4 bg-white">
       <div className="relative w-32 h-48">
         <div 
           className="absolute inset-0 animate-pulse rounded-lg"

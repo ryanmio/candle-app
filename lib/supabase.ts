@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { type Candle, type Feedback } from '@/types/candle'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error('Missing Supabase environment variables')
@@ -71,5 +71,15 @@ export async function submitFeedback(feedback: Omit<Feedback, 'id' | 'createdAt'
   }
   
   return data as Feedback
+}
+
+export async function getCandleBasicInfo(id: string) {
+  const { data } = await supabase
+    .from('candles')
+    .select('name, color, recipient_name')
+    .eq('id', id)
+    .single()
+  
+  return data
 }
 

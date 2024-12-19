@@ -5,7 +5,6 @@ export async function POST(request: Request) {
   try {
     const candle = await request.json()
     
-    // Validate the candle data
     if (!candle.name || !candle.recipient_name || !candle.color || !Array.isArray(candle.scents) || candle.scents.length === 0) {
       return NextResponse.json({ error: 'Invalid candle data. Please fill all required fields.' }, { status: 400 })
     }
