@@ -6,6 +6,8 @@ import { Slider } from '@/components/ui/slider'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import { submitFeedback } from '@/lib/supabase'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 
 interface Scent {
   name: string
@@ -26,14 +28,35 @@ export function FeedbackForm({
   const [comment, setComment] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    // Simulating API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    setIsSubmitted(true)
-    setIsSubmitting(false)
+    setError(null)
+
+    try {
+      const feedback = {
+        candle_id: candleId,
+        scent_feedback: Object.entries(scentFeedback).map(([name, intensity]) => ({
+          scent_name: name,
+          intensity
+        })),
+        comment
+      }
+
+      const result = await submitFeedback(feedback)
+      if (!result) {
+        throw new Error('Failed to submit feedback')
+      }
+
+      setIsSubmitted(true)
+    } catch (err) {
+      console.error('Error submitting feedback:', err)
+      setError('Failed to submit feedback. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (isSubmitted) {
@@ -55,6 +78,11 @@ export function FeedbackForm({
         <CardTitle className="text-2xl font-serif">Share Your Experience</CardTitle>
       </CardHeader>
       <CardContent>
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
         <form onSubmit={handleSubmit} className="space-y-6">
           {scents.map((scent) => (
             <div key={scent.name} className="space-y-2">

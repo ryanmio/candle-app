@@ -23,7 +23,7 @@ export interface Feedback {
   candle_id: string
   scent_feedback: ScentFeedback[]
   comment: string
-  created_at: string
+  created_at?: string
 }
 
 export interface ScentFeedback {
