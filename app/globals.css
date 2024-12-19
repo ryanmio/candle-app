@@ -84,3 +84,25 @@
   animation: flicker 1.5s infinite ease-in-out;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  from {
+    opacity: 0.4;
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(1px);
+  }
+}
+
