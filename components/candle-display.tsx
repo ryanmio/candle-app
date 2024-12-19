@@ -18,11 +18,16 @@ export function CandleDisplay({ candle, compact = false }: { candle: Candle, com
             className="absolute inset-x-0 bottom-0 top-0 rounded-[32px] transition-all duration-1000 ease-in-out
                        group-hover:opacity-95 group-hover:translate-y-[2px]
                        after:absolute after:inset-0 after:rounded-[32px]
-                       after:shadow-[inset_0_0_30px_rgba(0,0,0,0.1)]"
-            style={{ backgroundColor: candle.color }}
+                       after:shadow-[inset_0_4px_20px_rgba(255,255,255,0.2),inset_0_-4px_20px_rgba(0,0,0,0.05)]
+                       before:absolute before:inset-0 before:rounded-[32px] before:mix-blend-soft-light
+                       before:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),rgba(255,255,255,0))]"
+            style={{ 
+              backgroundColor: candle.color,
+              boxShadow: `0 4px 24px -12px ${candle.color}80`
+            }}
           >
             {/* Subtle gradient overlay */}
-            <div className="absolute inset-0 rounded-[32px] bg-gradient-to-b from-white/10 via-transparent to-black/5" />
+            <div className="absolute inset-0 rounded-[32px] bg-gradient-to-br from-white/10 via-transparent to-black/5" />
           </div>
           {/* Minimal wick */}
           <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-[2px] h-6 origin-bottom
@@ -53,10 +58,15 @@ export function CandleDisplay({ candle, compact = false }: { candle: Candle, com
         <div 
           className="absolute inset-0 rounded-[48px] transition-all duration-1000
                      after:absolute after:inset-0 after:rounded-[48px]
-                     after:shadow-[inset_0_0_60px_rgba(0,0,0,0.1)]"
-          style={{ backgroundColor: candle.color }}
+                     after:shadow-[inset_0_4px_20px_rgba(255,255,255,0.2),inset_0_-4px_20px_rgba(0,0,0,0.05)]
+                     before:absolute before:inset-0 before:rounded-[48px] before:mix-blend-soft-light
+                     before:bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.1),rgba(255,255,255,0))]"
+          style={{ 
+            backgroundColor: candle.color,
+            boxShadow: `0 4px 24px -12px ${candle.color}80`
+          }}
         >
-          <div className="absolute inset-0 rounded-[48px] bg-gradient-to-b from-white/10 via-transparent to-black/5" />
+          <div className="absolute inset-0 rounded-[48px] bg-gradient-to-br from-white/10 via-transparent to-black/5" />
         </div>
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[2px] h-9 origin-bottom
                        bg-gradient-to-b from-transparent via-neutral-300 to-neutral-400" />
