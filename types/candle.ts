@@ -7,6 +7,8 @@ export interface Candle {
   image_url?: string
   video_url?: string
   created_at: string
+  aromatherapy_description?: string
+  recommended_uses?: string[]
 }
 
 export interface Scent {

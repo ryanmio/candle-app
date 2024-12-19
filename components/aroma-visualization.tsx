@@ -24,19 +24,36 @@ export function AromaVisualization({ scents }: { scents: Scent[] }) {
     window.addEventListener('resize', updateSize)
 
     // Create particles for each scent
-    const particles = scents.flatMap(scent => 
-      Array.from({ length: Math.floor(scent.intensity * 50) }, () => {
+    const particles = scents.flatMap((scent, scentIndex) => {
+      // Calculate particle count based on intensity
+      const baseCount = 30 // minimum particles
+      const intensityBonus = Math.floor(scent.intensity * 100) // up to 100 additional particles
+      const particleCount = baseCount + intensityBonus
+
+      return Array.from({ length: particleCount }, () => {
         const baseSize = scent.intensity * 6
         const variance = baseSize * 0.7
+        
+        // Start near center with exponential distribution
+        const angle = Math.random() * Math.PI * 2
+        // Use exponential distribution for distance (more particles near center)
+        const distance = Math.pow(Math.random(), 2) * 50 // squared for more density in center
+        const centerX = canvas.offsetWidth / 2
+        const centerY = canvas.offsetHeight / 2
+        
+        // Add slight offset based on scent index to prevent perfect overlap
+        const offsetAngle = (scentIndex * Math.PI / scents.length)
+        const offsetX = Math.cos(offsetAngle) * 10
+        const offsetY = Math.sin(offsetAngle) * 10
+        
         return {
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
+          x: centerX + offsetX + (Math.cos(angle) * distance),
+          y: centerY + offsetY + (Math.sin(angle) * distance),
           size: Math.random() * variance + baseSize,
-          speedX: (Math.random() - 0.5) * 0.2,
-          speedY: (Math.random() - 0.5) * 0.2,
+          speedX: (Math.random() - 0.5) * 0.15, // Slightly slower initial speed
+          speedY: (Math.random() - 0.5) * 0.15,
           scent,
-          opacity: Math.random() * 0.3 + 0.1,
-          // Add slight wobble to movement
+          opacity: Math.random() * 0.4 + 0.2,
           wobble: {
             amplitude: Math.random() * 0.5,
             frequency: Math.random() * 0.02 + 0.01,
@@ -44,7 +61,7 @@ export function AromaVisualization({ scents }: { scents: Scent[] }) {
           }
         }
       })
-    )
+    })
 
     let time = 0
     // Animation
