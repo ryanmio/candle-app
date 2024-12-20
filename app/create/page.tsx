@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ColorInput } from '@/components/ui/color-input'
 import { type Candle } from '@/types/candle'
 import { UrlPopup } from '@/components/url-popup'
 
@@ -125,41 +126,10 @@ export default function CreateCandlePage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="color" className="text-sm font-medium">Candle Color</Label>
-                <div className="flex items-center gap-3">
-                  <Input 
-                    id="color" 
-                    name="color" 
-                    type="color" 
-                    value={formData.color} 
-                    onChange={handleChange} 
-                    required 
-                    className="sr-only"
-                    aria-label="Color picker"
-                  />
-                  <Input
-                    type="text"
-                    value={formData.color}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value.startsWith('#') && (value.length === 4 || value.length === 7)) {
-                        setFormData(prev => ({ ...prev, color: value }));
-                      } else if (value.startsWith('#')) {
-                        e.target.value = value;
-                      } else {
-                        e.target.value = '#' + value;
-                      }
-                    }}
-                    placeholder="#000000"
-                    className="w-32 font-mono text-sm uppercase"
-                    maxLength={7}
-                    pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-                  />
-                  <label 
-                    htmlFor="color"
-                    className="w-9 h-9 rounded-md border cursor-pointer transition-transform hover:scale-105 active:scale-95" 
-                    style={{ backgroundColor: formData.color }}
-                  />
-                </div>
+                <ColorInput
+                  value={formData.color}
+                  onChange={(color) => setFormData(prev => ({ ...prev, color }))}
+                />
               </div>
             </div>
 
