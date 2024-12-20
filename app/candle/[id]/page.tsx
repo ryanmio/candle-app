@@ -5,6 +5,7 @@ import { AromaVisualization } from '@/components/aroma-visualization'
 import { ScentDetails } from '@/components/scent-details'
 import { AromatherapyRecommendation } from '@/components/aromatherapy-recommendation'
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 
 type Props = {
   params: Promise<{
@@ -65,6 +66,14 @@ export default async function CandlePage({ params }: Props) {
         </div>
         <AromatherapyRecommendation candle={candle} />
         <FeedbackForm candleId={candle.id} scents={candle.scents} />
+        <div className="text-center pt-8">
+          <Link 
+            href="/create" 
+            className="inline-block hover:opacity-80 transition-opacity duration-300"
+          >
+            create your own candle
+          </Link>
+        </div>
       </div>
     </main>
   )

@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { type Candle } from '@/types/candle'
+import { UrlPopup } from '@/components/url-popup'
 
 export default function CreateCandlePage() {
   const router = useRouter()
@@ -19,6 +20,8 @@ export default function CreateCandlePage() {
   })
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showUrlPopup, setShowUrlPopup] = useState(false)
+  const [candleUrl, setCandleUrl] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -36,7 +39,10 @@ export default function CreateCandlePage() {
 
       if (response.ok) {
         if (data.id) {
-          router.push(`/candle/${data.id}`)
+          const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
+          const url = `${baseUrl}/candle/${data.id}`
+          setCandleUrl(url)
+          setShowUrlPopup(true)
         } else {
           setError('Invalid candle data received')
         }
@@ -124,6 +130,16 @@ export default function CreateCandlePage() {
           </form>
         </CardContent>
       </Card>
+      {showUrlPopup && (
+        <UrlPopup 
+          url={candleUrl} 
+          onClose={() => setShowUrlPopup(false)}
+          onView={() => {
+            setShowUrlPopup(false)
+            router.push(candleUrl)
+          }}
+        />
+      )}
     </main>
   )
 }

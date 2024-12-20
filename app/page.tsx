@@ -48,6 +48,12 @@ export default async function HomePage() {
           <div className="absolute bottom-0 left-8 right-8 h-[1px] 
                          bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
         </div>
+        
+        {/* Footer */}
+        <div className="mt-16 text-center text-sm text-neutral-400">
+          made by <a href="https://github.com/ryanmio" target="_blank" rel="noopener noreferrer" 
+                    className="hover:text-neutral-800 transition-colors duration-700">ryan</a>
+        </div>
       </div>
     </main>
   )
