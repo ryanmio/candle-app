@@ -37,23 +37,29 @@ export async function getCandleById(id: string): Promise<Candle | null> {
   }
 }
 
-export async function getAllCandles(): Promise<Candle[]> {
-  try {
-    const { data, error } = await supabase
-      .from('candles')
-      .select('*')
-      .order('created_at', { ascending: false })
-    
-    if (error) {
-      console.error('Error fetching candles:', error)
-      return []
-    }
-    
-    return data as Candle[]
-  } catch (error) {
-    console.error('Error in getAllCandles:', error)
+interface FilterOptions {
+  search?: string;
+}
+
+export async function getAllCandles(filters?: FilterOptions) {
+  let query = supabase
+    .from('candles')
+    .select('*')
+    .order('created_at', { ascending: false })
+
+  if (filters?.search) {
+    const searchTerm = filters.search.toLowerCase()
+    query = query.or(`name.ilike.%${searchTerm}%,recipient_name.ilike.%${searchTerm}%`)
+  }
+
+  const { data, error } = await query
+
+  if (error) {
+    console.error('Error:', error)
     return []
   }
+
+  return data || []
 }
 
 export async function createCandle(candle: Omit<Candle, 'id' | 'createdAt'>): Promise<Candle | null> {
@@ -127,6 +133,26 @@ export async function getCandleBasicInfo(id: string) {
   } catch (error) {
     console.error('Error in getCandleBasicInfo:', error)
     return null
+  }
+}
+
+export async function getFeedbackForCandle(candleId: string): Promise<Feedback[]> {
+  try {
+    const { data, error } = await supabase
+      .from('feedback')
+      .select('*')
+      .eq('candle_id', candleId)
+      .order('created_at', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching feedback:', error)
+      return []
+    }
+
+    return data as Feedback[]
+  } catch (error) {
+    console.error('Error in getFeedbackForCandle:', error)
+    return []
   }
 }
 

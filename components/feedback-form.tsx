@@ -17,10 +17,12 @@ interface Scent {
 
 export function FeedbackForm({ 
   candleId, 
-  scents 
+  scents,
+  onViewFeedback
 }: { 
   candleId: string
   scents: Scent[]
+  onViewFeedback: () => void
 }) {
   const [scentFeedback, setScentFeedback] = useState<Record<string, number>>(
     Object.fromEntries(scents.map(s => [s.name, 0.5]))
@@ -74,8 +76,14 @@ export function FeedbackForm({
 
   return (
     <Card className="bg-white/80 backdrop-blur-sm">
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-2xl font-serif">Share Your Experience</CardTitle>
+        <button
+          onClick={onViewFeedback}
+          className="text-sm text-neutral-400 hover:text-neutral-800 transition-colors"
+        >
+          View feedback
+        </button>
       </CardHeader>
       <CardContent>
         {error && (

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { HexColorPicker } from "react-colorful"
+import { Input } from "./input"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 import { Camera, Pipette } from "lucide-react"
 
@@ -11,22 +12,22 @@ interface ColorInputProps {
 }
 
 export function ColorInput({ value, onChange }: ColorInputProps) {
-  const [isEyeDropperSupported, setIsEyeDropperSupported] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
 
   useEffect(() => {
-    setIsEyeDropperSupported('EyeDropper' in window)
     setIsMobile('ontouchstart' in window)
   }, [])
 
   const openEyeDropper = async () => {
-    // @ts-ignore - EyeDropper API is not yet in TypeScript
-    const eyeDropper = new window.EyeDropper()
-    try {
-      const result = await eyeDropper.open()
-      onChange(result.sRGBHex)
-    } catch (e) {
-      // User canceled the eye dropper
+    if ('EyeDropper' in window) {
+      // @ts-ignore - EyeDropper API is not yet in TypeScript
+      const eyeDropper = new window.EyeDropper()
+      try {
+        const result = await eyeDropper.open()
+        onChange(result.sRGBHex)
+      } catch (e) {
+        // User canceled the eye dropper
+      }
     }
   }
 
@@ -68,8 +69,19 @@ export function ColorInput({ value, onChange }: ColorInputProps) {
         <PopoverContent className="w-auto p-4 border-0" align="start">
           <div className="space-y-4">
             <HexColorPicker color={value} onChange={onChange} />
-            <div className="text-center font-mono text-sm text-muted-foreground">
-              {value.toUpperCase()}
+            <div className="flex items-center gap-2">
+              <div className="text-sm text-muted-foreground">#</div>
+              <Input
+                value={value.replace('#', '')}
+                onChange={(e) => {
+                  const newValue = e.target.value
+                  if (/^[A-Fa-f0-9]{0,6}$/.test(newValue)) {
+                    onChange(`#${newValue.toLowerCase()}`)
+                  }
+                }}
+                className="h-8 px-0 font-mono text-sm uppercase bg-transparent border-0 focus-visible:ring-0"
+                maxLength={6}
+              />
             </div>
           </div>
         </PopoverContent>
@@ -86,7 +98,7 @@ export function ColorInput({ value, onChange }: ColorInputProps) {
             className="sr-only" 
           />
         </label>
-      ) : isEyeDropperSupported && (
+      ) : (
         <button
           type="button"
           onClick={openEyeDropper}

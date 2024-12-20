@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -10,6 +10,15 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ColorInput } from '@/components/ui/color-input'
 import { type Candle } from '@/types/candle'
 import { UrlPopup } from '@/components/url-popup'
+
+function generateRandomColor() {
+  const letters = '0123456789ABCDEF'
+  let color = '#'
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)]
+  }
+  return color
+}
 
 export default function CreateCandlePage() {
   const router = useRouter()
@@ -28,8 +37,8 @@ export default function CreateCandlePage() {
   }>({
     name: '',
     recipient_name: '',
-    color: '#ffffff',
-    scents: [{ name: '', description: '', intensity: 0.5, color: '#ffffff' }],
+    color: '#000000',
+    scents: [{ name: '', description: '', intensity: 0.5, color: '#000000' }],
     aromatherapy_description: '',
     recommended_uses: [],
   })
@@ -37,6 +46,14 @@ export default function CreateCandlePage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showUrlPopup, setShowUrlPopup] = useState(false)
   const [candleUrl, setCandleUrl] = useState('')
+
+  useEffect(() => {
+    setFormData(prev => ({
+      ...prev,
+      color: generateRandomColor(),
+      scents: prev.scents.map(scent => ({ ...scent, color: generateRandomColor() }))
+    }))
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -145,11 +162,7 @@ export default function CreateCandlePage() {
                   name="aromatherapy_description" 
                   value={formData.aromatherapy_description} 
                   onChange={(e) => handleChange(e as any)} 
-                  placeholder="e.g., 'Promotes deep relaxation and stress relief through calming lavender notes, perfect for evening meditation and unwinding after a long day.'
-
-or
-
-'Energizing blend that enhances focus and mental clarity, combining citrus and mint notes for an invigorating atmosphere.'"
+                  placeholder="e.g., 'Promotes deep relaxation and stress relief through calming lavender notes, perfect for evening meditation and unwinding after a long day.'"
                   className="w-full h-32 px-3 py-2 text-sm rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 />
               </div>
@@ -159,7 +172,7 @@ or
                 </Label>
                 <div className="space-y-3">
                   <Input 
-                    placeholder="Add recommended use and press Enter"
+                    placeholder="Type use and press Enter"
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') {
                         e.preventDefault();
@@ -278,7 +291,7 @@ or
                 variant="outline" 
                 onClick={() => setFormData({ 
                   ...formData, 
-                  scents: [...formData.scents, { name: '', description: '', intensity: 0.5, color: '#ffffff' }] 
+                  scents: [...formData.scents, { name: '', description: '', intensity: 0.5, color: generateRandomColor() }] 
                 })}
                 className="w-full"
                 disabled={formData.scents.length >= 4}

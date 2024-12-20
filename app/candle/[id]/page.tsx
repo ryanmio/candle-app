@@ -1,24 +1,11 @@
 import { getCandleById } from '@/lib/supabase'
 import { CandleDisplay } from '@/components/candle-display'
-import { FeedbackForm } from '@/components/feedback-form'
 import { AromaVisualization } from '@/components/aroma-visualization'
 import { ScentDetails } from '@/components/scent-details'
 import { AromatherapyRecommendation } from '@/components/aromatherapy-recommendation'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-
-type Props = {
-  params: Promise<{
-    id: string
-  }>
-}
-
-function mapDatabaseCandle(candle: any) {
-  return {
-    ...candle,
-    recipientName: candle.recipient_name
-  }
-}
+import { CandleFeedback } from './feedback'
 
 // Function to determine if a color is light or dark
 function isLightColor(color: string) {
@@ -39,7 +26,18 @@ function isLightColor(color: string) {
   return luminance > 0.5;
 }
 
-export default async function CandlePage({ params }: Props) {
+function mapDatabaseCandle(candle: any) {
+  return {
+    ...candle,
+    recipientName: candle.recipient_name
+  }
+}
+
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export default async function CandlePage({ params }: PageProps) {
   const { id } = await params
   const dbCandle = await getCandleById(id)
 
@@ -65,11 +63,11 @@ export default async function CandlePage({ params }: Props) {
           <ScentDetails scents={candle.scents} />
         </div>
         <AromatherapyRecommendation candle={candle} />
-        <FeedbackForm candleId={candle.id} scents={candle.scents} />
+        <CandleFeedback candleId={candle.id} scents={candle.scents} />
         <div className="text-center pt-8">
           <Link 
             href="/create" 
-            className="inline-block hover:opacity-80 transition-opacity duration-300"
+            className="text-sm text-neutral-400 hover:text-neutral-800 transition-colors"
           >
             create your own candle
           </Link>
