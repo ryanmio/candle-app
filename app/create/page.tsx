@@ -85,126 +85,247 @@ export default function CreateCandlePage() {
   }
 
   return (
-    <main className="container mx-auto px-4 py-8">
-      <Card className="max-w-2xl mx-auto">
-        <CardHeader>
-          <CardTitle>Create a New Candle</CardTitle>
+    <main className="container mx-auto px-4 py-12 max-w-3xl">
+      <Card className="shadow-lg border-0">
+        <CardHeader className="text-center border-b bg-gradient-to-r from-primary/5 to-primary/10">
+          <CardTitle className="text-3xl font-semibold">Create a New Candle</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           {error && (
-            <Alert variant="destructive" className="mb-4">
+            <Alert variant="destructive" className="mb-6">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="name">Candle Name</Label>
-              <Input id="name" name="name" value={formData.name} onChange={handleChange} required />
-            </div>
-            <div>
-              <Label htmlFor="recipient_name">Recipient Name</Label>
-              <Input id="recipient_name" name="recipient_name" value={formData.recipient_name} onChange={handleChange} required />
-            </div>
-            <div>
-              <Label htmlFor="color">Candle Color</Label>
-              <Input id="color" name="color" type="color" value={formData.color} onChange={handleChange} required />
-            </div>
-            <div>
-              <Label htmlFor="aromatherapy_description">Aromatherapy Description (Optional)</Label>
-              <Input 
-                id="aromatherapy_description" 
-                name="aromatherapy_description" 
-                value={formData.aromatherapy_description} 
-                onChange={handleChange} 
-                placeholder="Describe the aromatherapy benefits..."
-              />
-            </div>
-            <div>
-              <Label>Recommended Uses (Optional)</Label>
-              <div className="flex gap-2 flex-wrap">
-                <Input 
-                  placeholder="Add recommended use and press Enter"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      const input = e.target as HTMLInputElement;
-                      if (input.value.trim()) {
-                        setFormData(prev => ({
-                          ...prev,
-                          recommended_uses: [...(prev.recommended_uses || []), input.value.trim()]
-                        }));
-                        input.value = '';
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Basic Information Section */}
+            <div className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-sm font-medium">Candle Name</Label>
+                  <Input 
+                    id="name" 
+                    name="name" 
+                    value={formData.name} 
+                    onChange={handleChange} 
+                    required 
+                    className="transition-colors focus:border-primary"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="recipient_name" className="text-sm font-medium">Recipient Name</Label>
+                  <Input 
+                    id="recipient_name" 
+                    name="recipient_name" 
+                    value={formData.recipient_name} 
+                    onChange={handleChange} 
+                    required 
+                    className="transition-colors focus:border-primary"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="color" className="text-sm font-medium">Candle Color</Label>
+                <div className="flex items-center gap-3">
+                  <Input 
+                    id="color" 
+                    name="color" 
+                    type="color" 
+                    value={formData.color} 
+                    onChange={handleChange} 
+                    required 
+                    className="sr-only"
+                    aria-label="Color picker"
+                  />
+                  <Input
+                    type="text"
+                    value={formData.color}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (value.startsWith('#') && (value.length === 4 || value.length === 7)) {
+                        setFormData(prev => ({ ...prev, color: value }));
+                      } else if (value.startsWith('#')) {
+                        e.target.value = value;
+                      } else {
+                        e.target.value = '#' + value;
                       }
-                    }
-                  }}
+                    }}
+                    placeholder="#000000"
+                    className="w-32 font-mono text-sm uppercase"
+                    maxLength={7}
+                    pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
+                  />
+                  <label 
+                    htmlFor="color"
+                    className="w-9 h-9 rounded-md border cursor-pointer transition-transform hover:scale-105 active:scale-95" 
+                    style={{ backgroundColor: formData.color }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Optional Information Section */}
+            <div className="space-y-6 pt-4 border-t">
+              <h3 className="text-lg font-medium text-primary/80">Additional Details</h3>
+              <div className="space-y-2">
+                <Label htmlFor="aromatherapy_description" className="text-sm font-medium">
+                  Aromatherapy Description <span className="text-sm text-muted-foreground">(Optional)</span>
+                </Label>
+                <textarea 
+                  id="aromatherapy_description" 
+                  name="aromatherapy_description" 
+                  value={formData.aromatherapy_description} 
+                  onChange={(e) => handleChange(e as any)} 
+                  placeholder="e.g., 'Promotes deep relaxation and stress relief through calming lavender notes, perfect for evening meditation and unwinding after a long day.'
+
+or
+
+'Energizing blend that enhances focus and mental clarity, combining citrus and mint notes for an invigorating atmosphere.'"
+                  className="w-full h-32 px-3 py-2 text-sm rounded-md border border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                 />
-                {formData.recommended_uses?.map((use, index) => (
-                  <div key={index} className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded">
-                    {use}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setFormData(prev => ({
-                          ...prev,
-                          recommended_uses: prev.recommended_uses?.filter((_, i) => i !== index)
-                        }));
-                      }}
-                      className="ml-1 text-sm hover:text-destructive"
-                    >
-                      ×
-                    </button>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-sm font-medium">
+                  Recommended Uses <span className="text-sm text-muted-foreground">(Optional)</span>
+                </Label>
+                <div className="space-y-3">
+                  <Input 
+                    placeholder="Add recommended use and press Enter"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const input = e.target as HTMLInputElement;
+                        if (input.value.trim()) {
+                          setFormData(prev => ({
+                            ...prev,
+                            recommended_uses: [...(prev.recommended_uses || []), input.value.trim()]
+                          }));
+                          input.value = '';
+                        }
+                      }
+                    }}
+                    className="transition-colors focus:border-primary"
+                  />
+                  <div className="flex gap-2 flex-wrap">
+                    {formData.recommended_uses?.map((use, index) => (
+                      <div key={index} className="flex items-center gap-1 bg-primary/5 px-3 py-1.5 rounded-full text-sm">
+                        {use}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData(prev => ({
+                              ...prev,
+                              recommended_uses: prev.recommended_uses?.filter((_, i) => i !== index)
+                            }));
+                          }}
+                          className="ml-2 hover:text-destructive transition-colors"
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Scents Section */}
+            <div className="space-y-6 pt-4 border-t">
+              <h3 className="text-lg font-medium text-primary/80">Scent Profile</h3>
+              <div className="space-y-6">
+                {formData.scents.map((scent, index) => (
+                  <div key={index} className="p-6 rounded-lg bg-primary/5 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <Label className="text-base font-medium">Scent {index + 1}</Label>
+                      {index > 0 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive hover:text-destructive/80"
+                          onClick={() => {
+                            setFormData(prev => ({
+                              ...prev,
+                              scents: prev.scents.filter((_, i) => i !== index)
+                            }))
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      )}
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label className="text-sm">Name</Label>
+                        <Input 
+                          placeholder="e.g., Vanilla" 
+                          value={scent.name} 
+                          onChange={(e) => handleScentChange(index, 'name', e.target.value)} 
+                          required 
+                          className="transition-colors focus:border-primary"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm">Description</Label>
+                        <Input 
+                          placeholder="e.g., Sweet and creamy" 
+                          value={scent.description} 
+                          onChange={(e) => handleScentChange(index, 'description', e.target.value)} 
+                          required 
+                          className="transition-colors focus:border-primary"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-2">
+                      <div className="space-y-2">
+                        <Label className="text-sm">Intensity (1-10)</Label>
+                        <Input 
+                          type="range" 
+                          min="1" 
+                          max="10" 
+                          step="1" 
+                          value={Math.round(scent.intensity * 10)} 
+                          onChange={(e) => handleScentChange(index, 'intensity', parseFloat(e.target.value) / 10)} 
+                          required 
+                          className="flex-grow accent-primary"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-sm">Color</Label>
+                        <Input 
+                          type="color" 
+                          value={scent.color} 
+                          onChange={(e) => handleScentChange(index, 'color', e.target.value)} 
+                          required 
+                          className="w-full h-10 p-1 cursor-pointer"
+                        />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={() => setFormData({ 
+                  ...formData, 
+                  scents: [...formData.scents, { name: '', description: '', intensity: 0.5, color: '#ffffff' }] 
+                })}
+                className="w-full"
+                disabled={formData.scents.length >= 4}
+              >
+                {formData.scents.length >= 4 ? 'Maximum Scents Reached' : 'Add Another Scent'}
+              </Button>
             </div>
-            {formData.scents!.map((scent, index) => (
-              <div key={index} className="space-y-2 p-4 border rounded">
-                <Label>Scent {index + 1}</Label>
-                <Input 
-                  placeholder="Scent Name" 
-                  value={scent.name} 
-                  onChange={(e) => handleScentChange(index, 'name', e.target.value)} 
-                  required 
-                />
-                <Input 
-                  placeholder="Scent Description" 
-                  value={scent.description} 
-                  onChange={(e) => handleScentChange(index, 'description', e.target.value)} 
-                  required 
-                />
-                <div>
-                  <Label>Intensity</Label>
-                  <Input 
-                    type="range" 
-                    min="0" 
-                    max="1" 
-                    step="0.1" 
-                    value={scent.intensity} 
-                    onChange={(e) => handleScentChange(index, 'intensity', parseFloat(e.target.value))} 
-                    required 
-                  />
-                </div>
-                <div>
-                  <Label>Scent Color</Label>
-                  <Input 
-                    type="color" 
-                    value={scent.color} 
-                    onChange={(e) => handleScentChange(index, 'color', e.target.value)} 
-                    required 
-                  />
-                </div>
-              </div>
-            ))}
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => setFormData({ ...formData, scents: [...formData.scents!, { name: '', description: '', intensity: 0.5, color: '#ffffff' }] })}
-            >
-              Add Scent
-            </Button>
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Candle'}
-            </Button>
+
+            <div className="pt-6 border-t">
+              <Button 
+                type="submit" 
+                className="w-full py-6 text-lg font-medium" 
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Creating...' : 'Create Candle'}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
