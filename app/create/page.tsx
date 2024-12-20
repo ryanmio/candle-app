@@ -12,11 +12,25 @@ import { UrlPopup } from '@/components/url-popup'
 
 export default function CreateCandlePage() {
   const router = useRouter()
-  const [formData, setFormData] = useState<Partial<Candle>>({
+  const [formData, setFormData] = useState<{
+    name: string;
+    recipient_name: string;
+    color: string;
+    scents: Array<{
+      name: string;
+      description: string;
+      intensity: number;
+      color: string;
+    }>;
+    aromatherapy_description?: string;
+    recommended_uses?: string[];
+  }>({
     name: '',
     recipient_name: '',
     color: '#ffffff',
-    scents: [{ name: '', description: '', intensity: 0.5 }],
+    scents: [{ name: '', description: '', intensity: 0.5, color: '#ffffff' }],
+    aromatherapy_description: '',
+    recommended_uses: [],
   })
   const [error, setError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -58,10 +72,13 @@ export default function CreateCandlePage() {
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+    const value = e.target.type === 'text' ? e.target.value :
+                 e.target.type === 'color' ? e.target.value :
+                 e.target.value;
+    setFormData({ ...formData, [e.target.name]: value })
   }
 
-  const handleScentChange = (index: number, field: string, value: string | number) => {
+  const handleScentChange = (index: number, field: keyof typeof formData.scents[0], value: string | number) => {
     const newScents = [...formData.scents!]
     newScents[index] = { ...newScents[index], [field]: value }
     setFormData({ ...formData, scents: newScents })
@@ -92,8 +109,57 @@ export default function CreateCandlePage() {
               <Label htmlFor="color">Candle Color</Label>
               <Input id="color" name="color" type="color" value={formData.color} onChange={handleChange} required />
             </div>
+            <div>
+              <Label htmlFor="aromatherapy_description">Aromatherapy Description (Optional)</Label>
+              <Input 
+                id="aromatherapy_description" 
+                name="aromatherapy_description" 
+                value={formData.aromatherapy_description} 
+                onChange={handleChange} 
+                placeholder="Describe the aromatherapy benefits..."
+              />
+            </div>
+            <div>
+              <Label>Recommended Uses (Optional)</Label>
+              <div className="flex gap-2 flex-wrap">
+                <Input 
+                  placeholder="Add recommended use and press Enter"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      const input = e.target as HTMLInputElement;
+                      if (input.value.trim()) {
+                        setFormData(prev => ({
+                          ...prev,
+                          recommended_uses: [...(prev.recommended_uses || []), input.value.trim()]
+                        }));
+                        input.value = '';
+                      }
+                    }
+                  }}
+                />
+                {formData.recommended_uses?.map((use, index) => (
+                  <div key={index} className="flex items-center gap-1 bg-primary/10 px-2 py-1 rounded">
+                    {use}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setFormData(prev => ({
+                          ...prev,
+                          recommended_uses: prev.recommended_uses?.filter((_, i) => i !== index)
+                        }));
+                      }}
+                      className="ml-1 text-sm hover:text-destructive"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
             {formData.scents!.map((scent, index) => (
-              <div key={index} className="space-y-2">
+              <div key={index} className="space-y-2 p-4 border rounded">
+                <Label>Scent {index + 1}</Label>
                 <Input 
                   placeholder="Scent Name" 
                   value={scent.name} 
@@ -106,21 +172,33 @@ export default function CreateCandlePage() {
                   onChange={(e) => handleScentChange(index, 'description', e.target.value)} 
                   required 
                 />
-                <Input 
-                  type="range" 
-                  min="0" 
-                  max="1" 
-                  step="0.1" 
-                  value={scent.intensity} 
-                  onChange={(e) => handleScentChange(index, 'intensity', parseFloat(e.target.value))} 
-                  required 
-                />
+                <div>
+                  <Label>Intensity</Label>
+                  <Input 
+                    type="range" 
+                    min="0" 
+                    max="1" 
+                    step="0.1" 
+                    value={scent.intensity} 
+                    onChange={(e) => handleScentChange(index, 'intensity', parseFloat(e.target.value))} 
+                    required 
+                  />
+                </div>
+                <div>
+                  <Label>Scent Color</Label>
+                  <Input 
+                    type="color" 
+                    value={scent.color} 
+                    onChange={(e) => handleScentChange(index, 'color', e.target.value)} 
+                    required 
+                  />
+                </div>
               </div>
             ))}
             <Button 
               type="button" 
               variant="outline" 
-              onClick={() => setFormData({ ...formData, scents: [...formData.scents!, { name: '', description: '', intensity: 0.5 }] })}
+              onClick={() => setFormData({ ...formData, scents: [...formData.scents!, { name: '', description: '', intensity: 0.5, color: '#ffffff' }] })}
             >
               Add Scent
             </Button>
