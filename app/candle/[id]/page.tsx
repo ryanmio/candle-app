@@ -19,6 +19,25 @@ function mapDatabaseCandle(candle: any) {
   }
 }
 
+// Function to determine if a color is light or dark
+function isLightColor(color: string) {
+  // Convert color to RGB
+  let r, g, b;
+  if (color.startsWith('#')) {
+    r = parseInt(color.slice(1, 3), 16);
+    g = parseInt(color.slice(3, 5), 16);
+    b = parseInt(color.slice(5, 7), 16);
+  } else if (color.startsWith('rgb')) {
+    [r, g, b] = color.match(/\d+/g)!.map(Number);
+  } else {
+    return true; // Default to light for unknown formats
+  }
+  
+  // Calculate relative luminance
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.5;
+}
+
 export default async function CandlePage({ params }: Props) {
   const { id } = await params
   const dbCandle = await getCandleById(id)
@@ -28,12 +47,14 @@ export default async function CandlePage({ params }: Props) {
   }
 
   const candle = mapDatabaseCandle(dbCandle)
+  const bgColor = `color-mix(in srgb, ${candle.color} 10%, white)`
+  const textColor = isLightColor(candle.color) ? 'text-gray-800' : 'text-gray-100'
 
   return (
     <main 
-      className="min-h-screen w-full transition-colors duration-500"
+      className={`min-h-screen w-full transition-colors duration-500 ${textColor}`}
       style={{ 
-        backgroundColor: `color-mix(in srgb, ${candle.color} 10%, white)`,
+        backgroundColor: bgColor,
       }}
     >
       <div className="container max-w-2xl mx-auto px-4 py-8 space-y-8">
