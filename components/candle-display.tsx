@@ -72,7 +72,7 @@ export function CandleDisplay({ candle, compact = false }: { candle: Candle, com
                        animate-[glow_4s_ease-in-out_infinite_alternate]
                        before:absolute before:inset-0 before:-z-10 before:blur-md before:bg-amber-50/50" />
         
-        <div className="absolute inset-x-0 bottom-0 p-12 text-center">
+        <div className="absolute inset-x-0 bottom-8 text-center">
           <h1 className="text-4xl tracking-[0.05em] font-light mb-3 text-neutral-700">{candle.name}</h1>
           <p className="text-sm tracking-[0.2em] text-neutral-500">for {candle.recipientName}</p>
         </div>
