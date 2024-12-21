@@ -38,12 +38,9 @@ export function CandleDisplay({ candle, compact = false }: { candle: Candle, com
                          animate-[glow_4s_ease-in-out_infinite_alternate]
                          before:absolute before:inset-0 before:-z-10 before:blur-md before:bg-amber-50/50" />
         </div>
-        {/* Elegant hover name - hidden on mobile, shown on hover for desktop */}
-        <div className="absolute -bottom-14 left-0 right-0 text-center 
-                       md:opacity-0 md:group-hover:opacity-100 transition-all duration-1000 ease-in-out
-                       md:group-hover:-translate-y-1">
+        {/* Name - always visible */}
+        <div className="absolute -bottom-14 left-0 right-0 text-center">
           <p className="text-base tracking-[0.2em] text-neutral-500 font-light px-2
-                       opacity-0 animate-[fadeIn_0.5s_ease-out_forwards]
                        [text-wrap:balance]">
             {candle.name}
           </p>

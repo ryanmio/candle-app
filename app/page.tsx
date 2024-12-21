@@ -1,6 +1,6 @@
 import { getAllCandles } from '@/lib/supabase'
-import { CandleDisplay } from '@/components/candle-display'
 import { SearchBar } from '@/components/search-bar'
+import { CandleCard } from '@/components/candle-card'
 import Link from 'next/link'
 
 function mapDatabaseCandle(candle: any) {
@@ -47,24 +47,12 @@ export default async function HomePage({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 
                          gap-x-8 md:gap-x-16 gap-y-20 md:gap-y-24 pb-16">
             {candles.map((candle) => (
-              <Link 
-                key={candle.id} 
-                href={`/candle/${candle.id}`}
-                className="w-full"
-              >
-                <CandleDisplay candle={candle} compact />
-              </Link>
+              <CandleCard key={candle.id} candle={candle} />
             ))}
           </div>
           {/* Minimal shelf line with gradient */}
           <div className="absolute bottom-0 left-8 right-8 h-[1px] 
                          bg-gradient-to-r from-transparent via-neutral-200 to-transparent" />
-        </div>
-        
-        {/* Footer */}
-        <div className="mt-16 text-center text-sm text-neutral-400">
-          made by <a href="https://github.com/ryanmio" target="_blank" rel="noopener noreferrer" 
-                    className="hover:text-neutral-800 transition-colors duration-700">ryan</a>
         </div>
       </div>
     </main>
