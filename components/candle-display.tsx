@@ -1,5 +1,24 @@
 import { Card } from '@/components/ui/card'
 
+// Function to determine if a color is light or dark
+function isLightColor(color: string) {
+  // Convert color to RGB
+  let r, g, b;
+  if (color.startsWith('#')) {
+    r = parseInt(color.slice(1, 3), 16);
+    g = parseInt(color.slice(3, 5), 16);
+    b = parseInt(color.slice(5, 7), 16);
+  } else if (color.startsWith('rgb')) {
+    [r, g, b] = color.match(/\d+/g)!.map(Number);
+  } else {
+    return true; // Default to light for unknown formats
+  }
+  
+  // Calculate relative luminance using a lower threshold for better handling of medium colors
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.65; // Increased threshold to better identify medium-dark colors
+}
+
 interface Candle {
   id: string
   name: string
@@ -9,6 +28,8 @@ interface Candle {
 }
 
 export function CandleDisplay({ candle, compact = false }: { candle: Candle, compact?: boolean }) {
+  const textColor = isLightColor(candle.color) ? 'text-neutral-500' : 'text-white';
+
   if (compact) {
     return (
       <div className="relative group">
@@ -74,7 +95,7 @@ export function CandleDisplay({ candle, compact = false }: { candle: Candle, com
         
         <div className="absolute inset-x-0 bottom-8 text-center">
           <h1 className="text-4xl tracking-[0.05em] font-light mb-3 text-neutral-700">{candle.name}</h1>
-          <p className="text-sm tracking-[0.2em] text-neutral-500">for {candle.recipientName}</p>
+          <p className={`text-sm tracking-[0.2em] ${textColor}`}>for {candle.recipientName}</p>
         </div>
       </div>
     </div>
