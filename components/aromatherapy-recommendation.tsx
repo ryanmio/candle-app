@@ -19,14 +19,16 @@ export function AromatherapyRecommendation({ candle }: { candle: Candle }) {
             {candle.recommended_uses?.map((use) => (
               <div 
                 key={use}
-                className="px-3 py-1 rounded-full bg-neutral-50 text-sm text-neutral-500"
+                className="px-3 py-1 rounded-full text-sm text-neutral-500"
+                style={{ backgroundColor: `${candle.color}10` }}
               >
                 {use}
               </div>
             )) || defaultRecommendedUses.map((use) => (
               <div 
                 key={use}
-                className="px-3 py-1 rounded-full bg-neutral-50 text-sm text-neutral-500"
+                className="px-3 py-1 rounded-full text-sm text-neutral-500"
+                style={{ backgroundColor: `${candle.color}10` }}
               >
                 {use}
               </div>
