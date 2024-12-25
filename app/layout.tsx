@@ -7,8 +7,28 @@ const geistSans = Geist({
 });
 
 export const metadata = {
-  title: "Candle App",
-  description: "A personalized candle experience",
+  title: "Candle App - Personalized Candle Experience",
+  description: "Create and share personalized candles with custom scents, colors, and aromatherapy recommendations. A unique gifting experience for your loved ones.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
+  openGraph: {
+    title: "Candle App - Personalized Candle Experience",
+    description: "Create and share personalized candles with custom scents, colors, and aromatherapy recommendations.",
+    type: "website",
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Candle App Preview'
+      }
+    ]
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Candle App - Personalized Candle Experience",
+    description: "Create and share personalized candles with custom scents, colors, and aromatherapy recommendations.",
+    images: ['/og-image.png'],
+  },
   icons: {
     icon: [
       { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
