@@ -2,8 +2,6 @@
 
 A personalized candle experience that allows users to create, share, and provide feedback on custom candles. Visit [thiscandleisforyou.com](https://thiscandleisforyou.com) to create your own.
 
-![Homepage](public/homepage.jpg)
-
 ## Features
 
 - Create personalized candles with custom scents and colors
@@ -11,6 +9,7 @@ A personalized candle experience that allows users to create, share, and provide
 - Detailed scent profiles and aromatherapy recommendations
 - Shareable candle pages with QR codes
 
+![Homepage](public/homepage.jpg)
 ![Aroma Visualization](public/aroma-visualization.gif)
 ![Aroma Details](public/aroma-details.jpg)
 
