@@ -2,7 +2,7 @@
 
 A personalized candle experience that allows users to create, share, and provide feedback on custom candles. Visit [thiscandleisforyou.com](https://thiscandleisforyou.com) to create your own.
 
-![Homepage](public/homepage.png)
+![Homepage](public/homepage.jpg)
 
 ## Features
 
