@@ -16,7 +16,7 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: '/og-image.png',
+        url: '/opengraph-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Candle App Preview'
@@ -27,7 +27,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: "Candle App - Personalized Candle Experience",
     description: "Create and share personalized candles with custom scents, colors, and aromatherapy recommendations.",
-    images: ['/og-image.png'],
+    images: ['/twitter-image.jpg'],
   },
   icons: {
     icon: [
