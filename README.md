@@ -1,6 +1,18 @@
-# Candle App
+# ThisCandleIsForYou
 
-A personalized candle experience that allows users to view and provide feedback on custom candles.
+A personalized candle experience that allows users to create, share, and provide feedback on custom candles. Visit [thiscandleisforyou.com](https://thiscandleisforyou.com) to create your own.
+
+![Homepage](public/homepage.png)
+
+## Features
+
+- Create personalized candles with custom scents and colors
+- Interactive aroma visualization
+- Detailed scent profiles and aromatherapy recommendations
+- Shareable candle pages with QR codes
+
+![Aroma Visualization](public/aroma-visualization.gif)
+![Aroma Details](public/aroma-details.jpg)
 
 ## Candle Fields
 
@@ -79,4 +91,5 @@ Required environment variables:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SITE_URL=https://thiscandleisforyou.com
 ```
