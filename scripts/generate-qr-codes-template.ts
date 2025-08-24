@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 dotenv.config({ path: '.env.local' })
 
 // Other imports
-import { getAllGiftItems } from './supabase'
+import { getAllCandles as getAllGiftItems } from './supabase'
 import QRCode from 'qrcode'
 import fs from 'fs/promises'
 import path from 'path'
